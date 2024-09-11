@@ -5,7 +5,7 @@ const AllPosts = ({ blog }) => {
   const { author, _id, title, category, description, updatedAt } = blog;
   const postId = _id;
 
-  console.log("post id", postId);
+  // console.log("post id", postId);
 
   // console.log(author, _id, title, category, description, updatedAt);
 
