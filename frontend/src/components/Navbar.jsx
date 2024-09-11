@@ -23,7 +23,7 @@ const Navbar = () => {
     <div>
       <header className="fs-5">
         <Navs bg="dark" data-bs-theme="dark">
-          <Container className="navbar">
+          <Container className="navbar px-3">
             <NavLink to="/" className="text-white">
               <span style={{ fontWeight: "bold" }}>Blogify</span>
             </NavLink>
