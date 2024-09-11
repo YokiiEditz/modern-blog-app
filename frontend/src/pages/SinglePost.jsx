@@ -1,15 +1,28 @@
 import { useEffect, useState } from "react";
 import { API_URL, useBlogs } from "../context/BlogContext";
-// import axios from "axios";
-import { Link, useParams } from "react-router-dom";
-import { Breadcrumb, Container, Button, Row, Col } from "react-bootstrap";
+import Popup from "../utilities/Popup";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Breadcrumb,
+  Container,
+  Button,
+  Row,
+  Col,
+  Stack,
+} from "react-bootstrap";
+import { titleCaptialize, formatDate } from "../utilities/helpers";
+import { IoMdArrowBack } from "react-icons/io";
+import { FiEdit } from "react-icons/fi";
+import { MdDeleteForever } from "react-icons/md";
 
 const SinglePost = () => {
   const [postInfo, setPostInfo] = useState([]);
-  const { dataChanged, userInfo } = useBlogs();
+  const { userInfo, popup, handlePostDelete, dataChanged } = useBlogs();
 
   const { id } = useParams();
   const postId = id;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getPostById = async () => {
@@ -27,12 +40,11 @@ const SinglePost = () => {
       }
     };
     getPostById();
-  }, [dataChanged]);
+  }, [postId, dataChanged]);
 
   const { title, category, description, author, createdAt, updatedAt } =
     postInfo;
-
-  console.log("usefinfo from conetxt", userInfo);
+  // console.log("usefinfo from conetxt", userInfo);
 
   return (
     <div>
@@ -50,7 +62,7 @@ const SinglePost = () => {
           <Container className="pb-3">
             <Row xs={1} md={2}>
               <Col md={8} className="py-1 px-1">
-                <section className="px-3 py-2 border border-2 rounded-2">
+                <section className="px-3 py-3 pe-4 border border-2 rounded-2">
                   <div>
                     <h1>{title}</h1>
                     <span>{category}</span>
@@ -63,16 +75,18 @@ const SinglePost = () => {
                       <Button
                         variant="primary"
                         className="d-flex gap-1 align-items-center"
+                        onClick={() => navigate(`/edit/${postId}`)}
                       >
-                        {/* <FiEdit size={20} /> */}
+                        <FiEdit size={20} />
                         Edit this Post
                       </Button>
 
                       <Button
                         variant="danger"
                         className="d-flex gap-1 align-items-center"
+                        onClick={() => handlePostDelete(postId)}
                       >
-                        {/* <MdDeleteForever size={20} /> */}
+                        <MdDeleteForever size={20} />
                         Delete this Post
                       </Button>
                     </div>
@@ -81,30 +95,39 @@ const SinglePost = () => {
               </Col>
 
               <Col md={4} className="py-1 px-1" style={{ fontSize: "14px" }}>
-                <div className="px-2 py-2  border border-2 rounded-2">
-                  <h2 className="text-secondary">Author</h2>
+                <div className="px-3 py-3  border border-2 rounded-2">
+                  <h2 className="text-primary">Blog Author</h2>
 
-                  <div className="d-flex gap-2">
-                    <label className="fw-bold">Name:</label>
-                    <span className="fw-bold text-primary">
-                      {author?.username}
+                  <Stack direction="horizontal" className="pt-1" gap={1}>
+                    <span className="fw-bold text-secondary">Name:</span>
+                    <span className="fw-bold fs-6">
+                      {titleCaptialize(author?.username)}
                     </span>
-                  </div>
-                  {/* <div className="d-flex gap-2">
-                    <label className="fw-bold">Post created:</label>
-                    {createdAt && <span>{createdAt}</span>}
-                  </div>
-                  <div className="d-flex gap-2">
-                    <label className="fw-bold">Post updated:</label>
-                    {updatedAt && <span>{updatedAt}</span>}
-                  </div> */}
+                  </Stack>
+
+                  <Stack direction="horizontal" className="pt-1" gap={1}>
+                    <span className="fw-bold text-secondary">
+                      Post created:
+                    </span>
+                    {createdAt && (
+                      <span className="fs-6">{formatDate(createdAt)}</span>
+                    )}
+                  </Stack>
+
+                  <Stack direction="horizontal" className="pt-1" gap={1}>
+                    <span className="fw-bold text-secondary">
+                      Post updated:
+                    </span>
+                    {updatedAt && (
+                      <span className="fs-6">{formatDate(updatedAt)}</span>
+                    )}
+                  </Stack>
                 </div>
               </Col>
             </Row>
           </Container>
         )}
 
-        {/*
         <Button
           variant="secondary"
           className="mx-1 mt-5 py-2 px-2 d-flex gap-1 align-items-center"
@@ -114,7 +137,7 @@ const SinglePost = () => {
           Back to Home
         </Button>
 
-        {popup && <Popup text="Post Deleted" color="red" />} */}
+        {popup && <Popup text="Post Deleted" color="red" />}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { API_URL, useBlogs } from "../context/BlogContext";
+import { Button } from "react-bootstrap";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -33,7 +34,7 @@ const Login = () => {
       if (response.ok) {
         response.json().then((userInfo) => {
           // console.log("Userinfo from  LOGIN", userInfo.id);
-          sessionStorage.setItem("jwt", userInfo.id); // Assuming userInfo.token contains the JWT
+          sessionStorage.setItem("jwt", userInfo.id); // Assuming userInfo.token contains JWT
 
           setUserInfo(userInfo);
           setRedirect(true);
@@ -42,7 +43,8 @@ const Login = () => {
           handleFetchData();
           setDataChanged(!dataChanged);
 
-          const token = localStorage.getItem("jwt");
+          //const token =
+          localStorage.getItem("jwt");
           // console.log("token from localitem", token);
         });
       } else {
@@ -59,7 +61,7 @@ const Login = () => {
     <div>
       <h2>Login Page</h2>
 
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} className="authpage">
         <div>
           <label htmlFor="user-name">username</label>
           <input
@@ -82,7 +84,9 @@ const Login = () => {
           />
         </div>
 
-        <button>Login</button>
+        <Button type="submit" variant="dark" className="my-2 py-2 ">
+          Login
+        </Button>
       </form>
     </div>
   );

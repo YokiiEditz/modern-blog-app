@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { API_URL } from "../context/BlogContext";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -39,7 +40,7 @@ const Register = () => {
   return (
     <div>
       <h2>Register Page</h2>
-      <form onSubmit={registerForm}>
+      <form onSubmit={registerForm} className="authpage">
         <div>
           <label htmlFor="user-name">username</label>
           <input
@@ -62,7 +63,9 @@ const Register = () => {
           />
         </div>
 
-        <button>Register</button>
+        <Button type="submit" variant="dark" className="my-2 py-2 ">
+          Login
+        </Button>
       </form>
     </div>
   );

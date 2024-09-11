@@ -1,70 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
   list-style-type: none;
-  font-size: 18px;
-}
-
-nav {
-  padding: 10px;
-  background-color: aquamarine;
-}
-
-ul {
-  display: flex;
-  justify-content: space-between;
-  color: brown;
-  font-weight: 800;
-}
-
-/* a:not(:hover) {
   text-decoration: none;
-} */
+}
+
+a:not(:hover) {
+  text-decoration: none;
+}
+
+a.active {
+  text-decoration: underline;
+}
+
+header {
+  height: 85px;
+}
 
 .navbar {
-  padding: 10px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  /* border: 2px solid red; */
+  padding-block: 30px;
 }
-
-/* a.active {
-  font-weight: bold;
-  text-decoration: none;
-  text-transform: uppercase;
-} */
 
 .navLinks {
   display: flex;
-  gap: 15px;
+  align-items: center;
+  gap: 30px;
 }
 
-form {
+form.authpage {
   padding: 10px;
   max-width: 450px;
   margin: 0 auto;
-  /* border: 2px solid red; */
 }
 
-form > div {
+form.authpage > div {
   padding-block: 8px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  /* border: 2px solid red; */
 }
 
 div > h2 {
-  margin-block: 15px;
+  margin-block: 18px;
   text-align: center;
-  font-size: 25px;
-  text-transform: uppercase;
+  font-size: 28px;
+  text-transform: capitalize;
 }
 
 div > label {
-  font-size: 20px;
+  font-size: 18px;
   text-transform: capitalize;
 }
 
@@ -78,7 +66,7 @@ input {
   background-color: #fff;
 }
 
-button {
+.authpage button {
   width: 100%;
   display: block;
   background-color: #555;

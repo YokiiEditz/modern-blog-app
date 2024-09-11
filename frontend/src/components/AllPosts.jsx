@@ -1,12 +1,12 @@
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { titleCaptialize, formatDate } from "../utilities/helpers.js";
 
 const AllPosts = ({ blog }) => {
   const { author, _id, title, category, description, updatedAt } = blog;
   const postId = _id;
 
   // console.log("post id", postId);
-
   // console.log(author, _id, title, category, description, updatedAt);
 
   return (
@@ -31,8 +31,8 @@ const AllPosts = ({ blog }) => {
           </Card.Body>
 
           <Card.Footer className="d-flex justify-content-between align-items-center">
-            <span className="fw-bold">{author?.username}</span>
-            <small className="text-muted">{updatedAt}</small>
+            <span className="fw-bold">{titleCaptialize(author?.username)}</span>
+            <small className="text-muted">{formatDate(updatedAt)}</small>
           </Card.Footer>
         </Card>
       ) : (

@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import CreatePost from "./pages/CreatePost";
 import Layout from "./components/Layout";
 import SinglePost from "./pages/SinglePost";
+import EditPost from "./pages/EditPost";
+import Categories from "./pages/Categories";
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
             <Route path="register" element={<Register />} />
             <Route path="newpost" element={<CreatePost />} />
             <Route path="posts/:id" element={<SinglePost />} />
+            <Route path="/edit/:id" element={<EditPost />} />
+            <Route path="category" element={<Categories />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

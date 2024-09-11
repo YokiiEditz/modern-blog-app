@@ -1,20 +1,37 @@
-import { useState } from "react";
-import { Form, Button } from "react-bootstrap";
-import Popup from "../utilities/Popup";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Form, Button, Breadcrumb } from "react-bootstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import { API_URL, useBlogs } from "../context/BlogContext";
+import Popup from "../utilities/Popup";
 
-const CreatePost = () => {
+const EditPost = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [popBox, setPopBox] = useState(false);
-
   const { dataChanged, setDataChanged } = useBlogs();
 
   const navigate = useNavigate();
 
-  const handleCreatePost = async (e) => {
+  const { id } = useParams();
+  const postId = id;
+
+  useEffect(() => {
+    fetchPostsById();
+  }, []);
+
+  const fetchPostsById = async () => {
+    const response = await axios.get(API_URL + `/post/${postId}`, {
+      withCredentials: true,
+    });
+    const data = await response.data;
+    setTitle(data.title);
+    setCategory(data.category);
+    setDescription(data.description);
+  };
+
+  const updatePost = async (e) => {
     e.preventDefault();
     try {
       if (title === "" || category === "" || description === "") {
@@ -24,21 +41,18 @@ const CreatePost = () => {
 
       if (title !== "" && category !== "" && description !== "") {
         {
-          const newPost = {
+          const updatedPostDetails = {
             title: title,
             category: category,
             description: description,
           };
-          console.log("postdata:", newPost);
 
-          const response = await fetch(API_URL + "/post", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newPost),
-            credentials: "include",
-          });
+          const response = await axios.put(
+            API_URL + `/post/${postId}`,
+            updatedPostDetails
+          );
+
+          //console.log("link", API_URL + postId, updatedPostDetails);
 
           if (!response) {
             console.log("Post not created");
@@ -50,9 +64,9 @@ const CreatePost = () => {
           setPopBox(true);
 
           setTimeout(() => {
-            setPopBox(false);
-            navigate("/");
             setDataChanged(!dataChanged);
+            navigate("/");
+            setPopBox(false);
           }, 1000);
         }
       } else {
@@ -64,14 +78,26 @@ const CreatePost = () => {
   };
 
   return (
-    <div>
-      <h2>Create new Blog</h2>
+    <div className="py-3">
+      <div>
+        <Breadcrumb>
+          <Breadcrumb.Item active>
+            <Link to="/">Home</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item active>
+            <Link to={`/posts/${id}`}>BlogPost</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item active>Edit</Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+
+      <h2>Edit Post</h2>
       <Form
         className="my-3 p-3 border border-2 rounded-4"
-        onSubmit={handleCreatePost}
+        onSubmit={updatePost}
       >
         <Form.Group className="mb-3" controlId="title">
-          <Form.Label style={{ outline: "none" }}>
+          <Form.Label>
             <h4> Title:</h4>
           </Form.Label>
           <Form.Control
@@ -107,14 +133,25 @@ const CreatePost = () => {
           />
         </Form.Group>
 
-        <Button className="my-2 py-2 px-3" variant="dark" type="submit">
-          Create Post
-        </Button>
+        <div className="d-flex">
+          <Button className="my-2 py-2 px-3" variant="success" type="submit">
+            Update Post
+          </Button>
+
+          <Button
+            className="my-2 mx-3 py-2 px-3"
+            variant="secondary"
+            type="submit"
+            onClick={() => navigate(`/posts/${postId}`)}
+          >
+            Cancel
+          </Button>
+        </div>
       </Form>
 
-      {popBox && <Popup text="Post Created Successfully" color="green" />}
+      {popBox && <Popup text="Post Updated" color="green" />}
     </div>
   );
 };
 
-export default CreatePost;
+export default EditPost;
