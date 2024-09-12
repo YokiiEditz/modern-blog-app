@@ -13,10 +13,6 @@ a:not(:hover) {
   text-decoration: none;
 }
 
-a.active {
-  text-decoration: underline;
-}
-
 header {
   height: 85px;
 }
@@ -28,7 +24,8 @@ header {
 .navLinks {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 25px;
+  border: 2px solid red;
 }
 
 form.authpage {

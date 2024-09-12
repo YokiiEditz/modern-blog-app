@@ -19,7 +19,7 @@ const EditPost = () => {
 
   useEffect(() => {
     fetchPostsById();
-  }, []);
+  }, [dataChanged]);
 
   const fetchPostsById = async () => {
     const response = await axios.get(API_URL + `/post/${postId}`, {
@@ -58,16 +58,16 @@ const EditPost = () => {
             console.log("Post not created");
           }
 
-          setTitle("");
-          setCategory("");
-          setDescription("");
-          setPopBox(true);
-
           setTimeout(() => {
             setDataChanged(!dataChanged);
             navigate("/");
-            setPopBox(false);
+            setTitle("");
+            setCategory("");
+            setDescription("");
+            setPopBox(!popBox);
           }, 1000);
+
+          setPopBox(!popBox);
         }
       } else {
         alert("Enter details properly!");

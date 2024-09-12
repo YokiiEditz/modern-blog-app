@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
         });
       });
     } else {
-      console.log("Wrong credentials");
+      res.status(401).json({ message: "Incorrect password" });
     }
   } catch (error) {
     console.error("Login error:", error.message);

@@ -19,3 +19,14 @@ export function formatDate(time) {
   }).format(new Date(time));
   return updateDate;
 }
+
+export function trimWords(description, count) {
+  const wordsCount = count || 15;
+  // console.log("count", wordsCount);
+
+  const result =
+    description.split(" ").length > wordsCount
+      ? description.split(" ").slice(0, wordsCount).join(" ") + " ..."
+      : description;
+  return result;
+}

@@ -2,15 +2,16 @@ import { useState } from "react";
 import { API_URL } from "../context/BlogContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import Popup from "../utilities/Popup";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [popBox, setPopBox] = useState(false);
   const navigate = useNavigate();
 
   const registerForm = async (e) => {
     e.preventDefault();
-
     if (username === "" || password === "") {
       alert("Enter Details to Register");
       return null;
@@ -25,10 +26,15 @@ const Register = () => {
       // console.log("res", response);
 
       if (response.status === 201) {
-        alert("Registration completed!");
-        setUsername("");
-        setPassword("");
-        navigate("/login");
+        // alert("Registration completed!");
+
+        setTimeout(() => {
+          setPopBox(!popBox);
+          setUsername("");
+          setPassword("");
+          navigate("/login");
+        }, 1000);
+        setPopBox(!popBox);
       } else {
         alert("Username already exists! Try new username");
       }
@@ -64,9 +70,11 @@ const Register = () => {
         </div>
 
         <Button type="submit" variant="dark" className="my-2 py-2 ">
-          Login
+          Register
         </Button>
       </form>
+
+      {popBox && <Popup text="Registration Successful" color="green" />}
     </div>
   );
 };

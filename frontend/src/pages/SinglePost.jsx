@@ -2,14 +2,7 @@ import { useEffect, useState } from "react";
 import { API_URL, useBlogs } from "../context/BlogContext";
 import Popup from "../utilities/Popup";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  Breadcrumb,
-  Container,
-  Button,
-  Row,
-  Col,
-  Stack,
-} from "react-bootstrap";
+import { Breadcrumb, Container, Button, Row, Col, Card } from "react-bootstrap";
 import { titleCaptialize, formatDate } from "../utilities/helpers";
 import { IoMdArrowBack } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
@@ -17,7 +10,7 @@ import { MdDeleteForever } from "react-icons/md";
 
 const SinglePost = () => {
   const [postInfo, setPostInfo] = useState([]);
-  const { userInfo, popup, handlePostDelete, dataChanged } = useBlogs();
+  const { userInfo, popup, handlePostDelete } = useBlogs();
 
   const { id } = useParams();
   const postId = id;
@@ -27,8 +20,6 @@ const SinglePost = () => {
   useEffect(() => {
     const getPostById = async () => {
       try {
-        // console.log("API URL:", API_URL + `/post/${postId}`);
-
         fetch(API_URL + `/post/${postId}`).then((response) => {
           response.json().then((posts) => {
             // console.log("Data:", posts);
@@ -40,7 +31,7 @@ const SinglePost = () => {
       }
     };
     getPostById();
-  }, [postId, dataChanged]);
+  }, [postId]);
 
   const { title, category, description, author, createdAt, updatedAt } =
     postInfo;
@@ -61,16 +52,16 @@ const SinglePost = () => {
         {postInfo && (
           <Container className="pb-3">
             <Row xs={1} md={2}>
-              <Col md={8} className="py-1 px-1">
+              <Col xs={12} md={8} className="py-1 px-1">
                 <section className="px-3 py-3 pe-4 border border-2 rounded-2">
                   <div>
                     <h1>{title}</h1>
-                    <span>{category}</span>
+                    <span className="text-secondary">{category}</span>
                     <hr />
-                    <p className="py-1">{description}</p>
+                    <p>{description}</p>
                   </div>
 
-                  {userInfo?.id === postInfo?.author?._id && (
+                  {userInfo?.id === postInfo?.author?._id ? (
                     <div className="d-flex justify-content-between">
                       <Button
                         variant="primary"
@@ -90,15 +81,51 @@ const SinglePost = () => {
                         Delete this Post
                       </Button>
                     </div>
+                  ) : (
+                    <div>{/* no data here */}</div>
                   )}
                 </section>
               </Col>
 
-              <Col md={4} className="py-1 px-1" style={{ fontSize: "14px" }}>
-                <div className="px-3 py-3  border border-2 rounded-2">
-                  <h2 className="text-primary">Blog Author</h2>
+              <Col
+                xs={12}
+                md={4}
+                className="py-1 px-1"
+                style={{ fontSize: "14px" }}
+              >
+                <Card className="p-3">
+                  <Card.Title className="text-black text-center">
+                    <h3>Author</h3>
+                  </Card.Title>
 
-                  <Stack direction="horizontal" className="pt-1" gap={1}>
+                  <Row className="mb-2">
+                    <Col sm={4} className="fw-bold text-secondary">
+                      Name:
+                    </Col>
+                    <Col sm={8} className="text-primary fw-bold">
+                      {titleCaptialize(author?.username)}
+                    </Col>
+                  </Row>
+
+                  <Row className="mb-2">
+                    <Col sm={4} className="fw-bold text-secondary">
+                      Post created:
+                    </Col>
+                    <Col sm={8}>{createdAt && formatDate(createdAt)}</Col>
+                  </Row>
+
+                  <Row>
+                    <Col sm={4} className="fw-bold text-secondary">
+                      Post updated:
+                    </Col>
+                    <Col sm={8}>{updatedAt && formatDate(updatedAt)}</Col>
+                  </Row>
+                </Card>
+
+                {/* <div className="px-4 py-1  border border-2 rounded-2">
+                  <h2 className="text-black">Author</h2>
+
+                  <Stack direction="horizontal" gap={1}>
                     <span className="fw-bold text-secondary">Name:</span>
                     <span className="fw-bold fs-6">
                       {titleCaptialize(author?.username)}
@@ -122,7 +149,7 @@ const SinglePost = () => {
                       <span className="fs-6">{formatDate(updatedAt)}</span>
                     )}
                   </Stack>
-                </div>
+                </div> */}
               </Col>
             </Row>
           </Container>

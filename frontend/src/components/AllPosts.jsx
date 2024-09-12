@@ -1,11 +1,14 @@
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { titleCaptialize, formatDate } from "../utilities/helpers.js";
+import {
+  titleCaptialize,
+  formatDate,
+  trimWords,
+} from "../utilities/helpers.js";
 
 const AllPosts = ({ blog }) => {
   const { author, _id, title, category, description, updatedAt } = blog;
   const postId = _id;
-
   // console.log("post id", postId);
   // console.log(author, _id, title, category, description, updatedAt);
 
@@ -17,11 +20,7 @@ const AllPosts = ({ blog }) => {
             <Card.Title className="fs-3">{title}</Card.Title>
             <span className="text-secondary">{category}</span>
 
-            <Card.Text>
-              {description.split(" ").length > 10
-                ? description.split(" ").slice(0, 10).join(" ") + " ..."
-                : description}
-            </Card.Text>
+            <Card.Text>{trimWords(description)}</Card.Text>
 
             <Button className="bg-dark border-0">
               <Link className="text-decoration-none" to={`/posts/${postId}`}>

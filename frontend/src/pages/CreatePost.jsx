@@ -18,7 +18,7 @@ const CreatePost = () => {
     e.preventDefault();
     try {
       if (title === "" || category === "" || description === "") {
-        alert("Enter details!");
+        alert("Enter details");
         return null;
       }
 
@@ -29,8 +29,7 @@ const CreatePost = () => {
             category: category,
             description: description,
           };
-          console.log("postdata:", newPost);
-
+          // console.log("postdata:", newPost);
           const response = await fetch(API_URL + "/post", {
             method: "POST",
             headers: {
@@ -40,26 +39,26 @@ const CreatePost = () => {
             credentials: "include",
           });
 
-          if (!response) {
+          if (response) {
+            setTimeout(() => {
+              setDataChanged(!dataChanged);
+              setTitle("");
+              setCategory("");
+              setDescription("");
+              setPopBox(!popBox);
+              navigate("/");
+            }, 1000);
+          } else {
             console.log("Post not created");
           }
 
-          setTitle("");
-          setCategory("");
-          setDescription("");
-          setPopBox(true);
-
-          setTimeout(() => {
-            setPopBox(false);
-            navigate("/");
-            setDataChanged(!dataChanged);
-          }, 1000);
+          setPopBox(!popBox);
         }
       } else {
         alert("Enter details properly!");
       }
     } catch (error) {
-      console.log("Error sending data!" + error.message);
+      console.log("Error creattin post data!" + error.message);
     }
   };
 

@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { API_URL, useBlogs } from "../context/BlogContext";
 import { Button } from "react-bootstrap";
+import Popup from "../utilities/Popup";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect, setRedirect] = useState(false);
+  const [popBox, setPopBox] = useState(false);
+  const navigate = useNavigate();
 
   const { setUserInfo, dataChanged, setDataChanged, handleFetchData } =
     useBlogs();
@@ -37,12 +39,17 @@ const Login = () => {
           sessionStorage.setItem("jwt", userInfo.id); // Assuming userInfo.token contains JWT
 
           setUserInfo(userInfo);
-          setRedirect(true);
-          setUsername("");
-          setPassword("");
           handleFetchData();
-          setDataChanged(!dataChanged);
 
+          setTimeout(() => {
+            setPopBox(!popBox);
+            setDataChanged(!dataChanged);
+            setUsername("");
+            setPassword("");
+            navigate("/");
+          }, 1000);
+
+          setPopBox(!popBox);
           //const token =
           localStorage.getItem("jwt");
           // console.log("token from localitem", token);
@@ -52,10 +59,6 @@ const Login = () => {
       }
     }
   };
-
-  if (redirect) {
-    return <Navigate to="/" />;
-  }
 
   return (
     <div>
@@ -88,6 +91,8 @@ const Login = () => {
           Login
         </Button>
       </form>
+
+      {popBox && <Popup text="Login Success" color="green" />}
     </div>
   );
 };

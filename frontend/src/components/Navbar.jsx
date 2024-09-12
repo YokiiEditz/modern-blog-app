@@ -1,13 +1,18 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { API_URL, useBlogs } from "../context/BlogContext";
 import Container from "react-bootstrap/Container";
-
 import { Navbar as Navs } from "react-bootstrap";
+import Nav from "react-bootstrap/Nav";
+import Popup from "../utilities/Popup";
 
 const Navbar = () => {
-  const { userInfo, setUserInfo } = useBlogs();
+  const [popBox, setPopBox] = useState(false);
 
+  const { userInfo, setUserInfo } = useBlogs();
   const username = userInfo?.username;
+
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     console.log("Logout clicked!");
@@ -16,55 +21,85 @@ const Navbar = () => {
       credentials: "include",
       method: "POST",
     });
+
     setUserInfo(null);
+    setPopBox(!popBox);
+
+    setTimeout(() => {
+      setPopBox(false);
+      navigate("/");
+    }, 500);
+  };
+
+  const navLinkStyles = ({ isActive }) => {
+    return {
+      fontWeight: isActive ? "bold" : "",
+      color: isActive ? "#8a8a8a" : "white",
+      textDecoration: isActive ? "underline" : "none",
+    };
   };
 
   return (
-    <div>
-      <header className="fs-5">
-        <Navs bg="dark" data-bs-theme="dark">
-          <Container className="navbar px-3">
+    <>
+      <div className="mb-1" style={{ fontSize: "20px" }}>
+        <Navs bg="dark" expand="lg" data-bs-theme="dark">
+          <Container>
             <NavLink to="/" className="text-white">
-              <span style={{ fontWeight: "bold" }}>Blogify</span>
+              <h3 style={{ fontWeight: "bold" }}>Blogify</h3>
             </NavLink>
+            <Navs.Toggle aria-controls="basic-Navs-nav" />
+            <Navs.Collapse id="basic-Navs-nav">
+              <Nav className="ms-auto">
+                {username ? (
+                  <>
+                    <Nav.Link as="li">
+                      <NavLink to="/newpost" className="text-white">
+                        Create Post
+                      </NavLink>
+                    </Nav.Link>
 
-            {username ? (
-              <div className="navLinks">
-                <NavLink to="/newpost" className="text-white ">
-                  Create Post
-                </NavLink>
+                    <Nav.Link as="li">
+                      <NavLink
+                        onClick={handleLogout}
+                        className="text-white text-decoration-none"
+                      >
+                        <span>
+                          Logout
+                          <span
+                            className="p-1 text-secondary-emphasis"
+                            style={{
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {username && `(${username})`}
+                          </span>
+                        </span>
+                      </NavLink>
+                    </Nav.Link>
+                  </>
+                ) : (
+                  <>
+                    <Nav.Link as="li">
+                      <NavLink to="/login" style={navLinkStyles}>
+                        Login
+                      </NavLink>
+                    </Nav.Link>
 
-                <NavLink
-                  onClick={handleLogout}
-                  className="text-white text-decoration-none"
-                >
-                  <span>
-                    Logout
-                    <span
-                      className="p-1 text-secondary-emphasis"
-                      style={{
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {username && `(${username})`}
-                    </span>
-                  </span>
-                </NavLink>
-              </div>
-            ) : (
-              <div className="navLinks">
-                <NavLink to="/login" className="text-white ">
-                  Login
-                </NavLink>
-                <NavLink to="/register" className="text-white ">
-                  Register
-                </NavLink>
-              </div>
-            )}
+                    <Nav.Link as="li">
+                      <NavLink to="/register" style={navLinkStyles}>
+                        Register
+                      </NavLink>
+                    </Nav.Link>
+                  </>
+                )}
+              </Nav>
+            </Navs.Collapse>
           </Container>
         </Navs>
-      </header>
-    </div>
+      </div>
+
+      {popBox && <Popup text="Logout success" color="red" />}
+    </>
   );
 };
 
